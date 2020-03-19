@@ -19,12 +19,10 @@ a=1
 def taskactivelist(courseId,classId):
     global activeList,a
     url="https://mobilelearn.chaoxing.com/ppt/activeAPI/taskactivelist?courseId="+str(courseId)+"&classId="+str(classId)+"&uid="+uid
-    try:
-        res=requests.get(url,headers=headers)
+    res=requests.get(url,headers=headers)
+    respon = res.status_code
+    if respon==200:
         data=json.loads(res.text)
-    except:
-        print('error')#不知道为啥...
-    else:
         activeList=data['activeList']
         #print(activeList)
         for item in activeList:
@@ -34,13 +32,15 @@ def taskactivelist(courseId,classId):
             if(item['activeType']==2 and item['status']==1):
                 signurl=item['url']
                 aid = getvar(signurl)
-                #print('2')
+                    #print('2')
                 if(aid not in activates):
-                    print('[签到]',i,'号课查询到待签到活动 活动名称:%s 活动状态:%s 活动时间:%s aid:%s'%(item['nameOne'],item['nameTwo'],item['nameFour'],aid))
+                    print('[签到]',coursedata[i]['name'],'查询到待签到活动 活动名称:%s 活动状态:%s 活动时间:%s aid:%s'%(item['nameOne'],item['nameTwo'],item['nameFour'],aid))
                     sign(aid,uid)
                     a=2
                     #print('调用签到函数')
-    
+    else:
+            print('error',respon)#不知道为啥...
+
 
 def getvar(url):
     var1 = url.split("&")
@@ -88,7 +88,7 @@ for item in coursedata:
 while 1:
     for i in range(quantity):
         taskactivelist(coursedata[i]['courseid'],coursedata[i]['classid'])
-        time.sleep(5)
+        time.sleep(20)
         if a==2:
             a=0
         else:
