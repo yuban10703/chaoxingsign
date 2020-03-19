@@ -76,7 +76,7 @@ for item in cdata['channelList']:
     pushdata={}
     pushdata['courseid']=item['content']['course']['data'][0]['id']
     pushdata['name']=item['content']['course']['data'][0]['name']
-    pushdata['imageurl']=item['content']['course']['data'][0]['imageurl']
+    #pushdata['imageurl']=item['content']['course']['data'][0]['imageurl']
     pushdata['classid']=item['content']['id']
     coursedata.append(pushdata)
 print("获取成功:")
