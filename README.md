@@ -2,7 +2,6 @@
 超星学习通自动签到
 原作者https://www.bilibili.com/video/av94208525 食用方法https://yuban10703.xyz/archives/527
 
-<a href="https://github.com/yuban10703/chaoxingsign">https://github.com/yuban10703/chaoxingsign</a>
 先安装python3
 教程链接：
 <a href="https://blog.csdn.net/qq_25814003/article/details/80609729">https://blog.csdn.net/qq_25814003/article/details/80609729</a>
