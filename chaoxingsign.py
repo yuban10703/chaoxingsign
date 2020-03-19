@@ -1,43 +1,42 @@
-import requests,json,time
+import requests,json,time,datetime
 
 #填入Cookie
 headers={
   "Cookie":"",
-  "User-Agent": "Mozilla/5.0 (iPad; CPU OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 ChaoXingStudy/ChaoXingStudy_3_4.3.2_ios_phone_201911291130_27 (@Kalimdor)_11391565702936108810"
+  "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 6.0.1; HUAWEI ALE-CL00 Build/MOB31T) com.chaoxing.mobile/ChaoXingStudy_3_4.3.6_android_phone_496_27 (@Kalimdor)_57c3eb14b06a443db750026b3754a8ad"
 }
 #填入uid
 uid=""
+#设置速度(建议不低于5)
+speed=10
 coursedata=[]
 activeList=[]
 course_index=0
-speed=10
 status=0
-status2=0
 activates=[]
-quantity=0
 a=1
+index=0
 def taskactivelist(courseId,classId):
-    global activeList,a
+    global a
     url="https://mobilelearn.chaoxing.com/ppt/activeAPI/taskactivelist?courseId="+str(courseId)+"&classId="+str(classId)+"&uid="+uid
     res=requests.get(url,headers=headers)
     respon = res.status_code
-    if respon==200:
+    if respon==200:#网页状态码正常
         data=json.loads(res.text)
         activeList=data['activeList']
         #print(activeList)
         for item in activeList:
             if("nameTwo" not in item):
                 continue
-                print('1')
             if(item['activeType']==2 and item['status']==1):
-                signurl=item['url']
+                signurl=item['url']#提取activePrimaryId
                 aid = getvar(signurl)
-                    #print('2')
                 if(aid not in activates):
-                    print('[签到]',coursedata[i]['name'],'查询到待签到活动 活动名称:%s 活动状态:%s 活动时间:%s aid:%s'%(item['nameOne'],item['nameTwo'],item['nameFour'],aid))
-                    sign(aid,uid)
+                    nowtime=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') #获取当前时间
+                    print(nowtime,'[签到]',coursedata[i]['name'],'查询到待签到活动 活动名称:%s 活动状态:%s 活动时间:%s aid:%s'%(item['nameOne'],item['nameTwo'],item['nameFour'],aid))
+                    sign(aid,uid)#print('调用签到函数')
                     a=2
-                    #print('调用签到函数')
+
     else:
             print('error',respon)#不知道为啥...
 
@@ -60,7 +59,7 @@ def sign(aid,uid):
         activates.append(aid)
         status=2
     else:
-        print("签到失败")  
+        print(res.text,'签到失败')  
         activates.append(aid)
 
         
@@ -69,7 +68,6 @@ res=requests.get(url,headers=headers)
 cdata=json.loads(res.text)
 if(cdata['result']!=1):
     print("课程列表获取失败")
-
 for item in cdata['channelList']:
     if("course" not in item['content']):
         continue
@@ -80,18 +78,17 @@ for item in cdata['channelList']:
     pushdata['classid']=item['content']['id']
     coursedata.append(pushdata)
 print("获取成功:")
-index=0
-for item in coursedata:
+
+for item in coursedata:#打印课程
         print(str(index)+".课程名称:"+item['name'])
         index+=1
-        quantity+=1
+        
 while 1:
-    for i in range(quantity):
+    for i in range(index):
+        time.sleep(speed)#休眠
         taskactivelist(coursedata[i]['courseid'],coursedata[i]['classid'])
-        time.sleep(20)
         if a==2:
             a=0
-        else:
-            print('[签到]监控运行中,',coursedata[i]['name'],'未查询到签到活动')
-            
-                
+        else:           
+            nowtime=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            print(nowtime,'[监控运行中]课程:',coursedata[i]['name'],'未查询到签到活动')
