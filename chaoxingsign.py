@@ -8,7 +8,7 @@ headers={
 #填入uid
 uid=""
 #设置速度(建议不低于5)
-speed=10
+speed=5
 #server酱推送
 SCKEY=''
 coursedata=[]
@@ -34,14 +34,13 @@ def taskactivelist(courseId,classId):
                 signurl=item['url']#提取activePrimaryId
                 aid = getvar(signurl)
                 if(aid not in activates):
-                    nowtime=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') #获取当前时间
-                    print(nowtime,'[签到]',coursedata[i]['name'],'查询到待签到活动 活动名称:%s 活动状态:%s 活动时间:%s aid:%s'%(item['nameOne'],item['nameTwo'],item['nameFour'],aid))
+                    print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),'[签到]',coursedata[i]['name'],'查询到待签到活动 活动名称:%s 活动状态:%s 活动时间:%s aid:%s'%(item['nameOne'],item['nameTwo'],item['nameFour'],aid))
                     sign(aid,uid)#print('调用签到函数')
                     
                     a=2
 
     else:
-            print('error',respon)#不知道为啥...
+        print('error',respon)#不知道为啥...
 
 
 def getvar(url):
@@ -107,5 +106,4 @@ while 1:
         if a==2:
             a=0
         else:           
-            nowtime=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            print(nowtime,'[监控运行中]课程:',coursedata[i]['name'],'未查询到签到活动')         
+            print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),'[监控运行中]课程:',coursedata[i]['name'],'未查询到签到活动')         
