@@ -16,6 +16,6 @@
 然后双击运行就好了
 <img src="https://cdn.jsdelivr.net/gh/yuban10703/BlogImgdata/img/20200312101356.png" />
 server酱效果:
-<img src="https://cdn.jsdelivr.net/gh/yuban10703/BlogImgdata/img/20200320040426.jpg" />
+<img src="https://cdn.jsdelivr.net/gh/yuban10703/BlogImgdata/img/20200320040841.jpg"/>
 这个报错的话应该是cookie过期了,重新获取下应该就好了
 <img src="https://cdn.jsdelivr.net/gh/yuban10703/BlogImgdata/img/20200312101523.png" />
