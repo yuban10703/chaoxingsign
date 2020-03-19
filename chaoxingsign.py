@@ -7,8 +7,8 @@ headers={
 }
 #填入uid
 uid=""
-#设置速度(建议不低于5)
-speed=5
+#设置轮询间隔(单位:秒,建议不低于5)
+speed=10
 #server酱推送
 SCKEY=''
 coursedata=[]
