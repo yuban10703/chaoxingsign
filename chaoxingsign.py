@@ -1,16 +1,15 @@
 import requests,json,time,datetime
 
-#填入Cookie
-headers={
-  "Cookie":"",
-  "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 6.0.1; HUAWEI ALE-CL00 Build/MOB31T) com.chaoxing.mobile/ChaoXingStudy_3_4.3.6_android_phone_496_27 (@Kalimdor)_57c3eb14b06a443db750026b3754a8ad"
-}
-#填入uid
-uid=""
-#设置轮询间隔(单位:秒,建议不低于5)
-speed=10
+username=''#账号
+passwd=''#密码
 #server酱推送
 SCKEY=''
+#设置轮询间隔(单位:秒,建议不低于5)
+speed=10
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36'}
+
+#填入uid
+uid=""
 coursedata=[]
 activeList=[]
 course_index=0
@@ -18,10 +17,20 @@ status=0
 activates=[]
 a=1
 index=0
+def login(username,passwd):
+    url='https://passport2-api.chaoxing.com/v11/loginregister'
+    data={'uname':username,'code':passwd,}
+    session = requests.session()
+    cookie_jar = session.post(url=url, data=data, headers=headers).cookies
+    cookie_t = requests.utils.dict_from_cookiejar(cookie_jar)
+    return cookie_t
+
+cookie=login(username,passwd)
+
 def taskactivelist(courseId,classId):
     global a
     url="https://mobilelearn.chaoxing.com/ppt/activeAPI/taskactivelist?courseId="+str(courseId)+"&classId="+str(classId)+"&uid="+uid
-    res=requests.get(url,headers=headers)
+    res=requests.get(url,headers=headers,cookies=cookie)
     respon = res.status_code
     if respon==200:#网页状态码正常
         data=json.loads(res.text)
@@ -55,7 +64,7 @@ def getvar(url):
 def sign(aid,uid):
     global status,activates
     url="https://mobilelearn.chaoxing.com/pptSign/stuSignajax?activeId="+aid+"&uid="+uid+"&clientip=&latitude=-1&longitude=-1&appType=15&fid=0"
-    res=requests.get(url,headers=headers)
+    res=requests.get(url,headers=headers,cookies=cookie)
     push(SCKEY,res.text)
     if(res.text=="success"):
         print("用户:"+uid+" 签到成功！")
@@ -80,7 +89,7 @@ def push(SCKEY,msg):
 
 
 url="http://mooc1-api.chaoxing.com/mycourse/backclazzdata?view=json&rss=1"
-res=requests.get(url,headers=headers)
+res=requests.get(url,headers=headers,cookies=cookie)
 cdata=json.loads(res.text)
 if(cdata['result']!=1):
     print("课程列表获取失败")
