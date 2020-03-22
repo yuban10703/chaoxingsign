@@ -8,8 +8,7 @@ SCKEY=''
 speed=10
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36'}
 
-#填入uid
-uid=""
+
 coursedata=[]
 activeList=[]
 course_index=0
@@ -17,7 +16,8 @@ status=0
 activates=[]
 a=1
 index=0
-def login(username,passwd):
+
+def login(username,passwd): #获取cookie
     url='https://passport2-api.chaoxing.com/v11/loginregister'
     data={'uname':username,'code':passwd,}
     session = requests.session()
@@ -26,6 +26,7 @@ def login(username,passwd):
     return cookie_t
 
 cookie=login(username,passwd)
+uid=cookie['UID']
 
 def taskactivelist(courseId,classId):
     global a
