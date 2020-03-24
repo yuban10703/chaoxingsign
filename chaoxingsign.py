@@ -42,11 +42,14 @@ def token():#获取上传图片用的token
     return(tokendict['_token']) 
 
 def upload():#上传图片
-    url='https://pan-yz.chaoxing.com/upload'
-    files={'file':(picname, open(picname,'rb'),'image/webp,image/*',),}
-    res=requests.post(url,data={'puid':uid,'_token':token()},files=files,headers=headers,cookies=cookie)
-    resdict=json.loads(res.text)
-    return(resdict['objectId'])
+    if picname.isspace() or len(picname)==0:
+        return
+    else:
+        url='https://pan-yz.chaoxing.com/upload'
+        files={'file':(picname, open(picname,'rb'),'image/webp,image/*',),}
+        res=requests.post(url,data={'puid':uid,'_token':token()},files=files,headers=headers,cookies=cookie)
+        resdict=json.loads(res.text)
+        return(resdict['objectId'])
 
 def taskactivelist(courseId,classId):#查找签到任务
     global a
