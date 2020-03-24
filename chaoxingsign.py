@@ -1,14 +1,20 @@
 import requests,json,time,datetime
 
+
 username=''#账号
 passwd=''#密码
 #server酱推送
 SCKEY=''
+name=''#签到后老师那里显示的名字,空着的话就是默认
+address='火星'#地址
+latitude='32.2829260000'#经度
+longitude='43.9237990000'#经度
+picname='a.png'#同目录下的照片名字
 #设置轮询间隔(单位:秒,建议不低于5)
 speed=10
+
+
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36'}
-
-
 coursedata=[]
 activeList=[]
 course_index=0
@@ -16,6 +22,7 @@ status=0
 activates=[]
 a=1
 index=0
+
 
 def login(username,passwd): #获取cookie
     url='https://passport2-api.chaoxing.com/v11/loginregister'
@@ -27,6 +34,19 @@ def login(username,passwd): #获取cookie
 
 cookie=login(username,passwd)
 uid=cookie['UID']
+
+def token():
+    url='https://pan-yz.chaoxing.com/api/token/uservalid'
+    res=requests.get(url,headers=headers,cookies=cookie)
+    tokendict=json.loads(res.text)
+    return(tokendict['_token']) 
+
+def upload():
+    url='https://pan-yz.chaoxing.com/upload'
+    files={'file':(picname, open(picname,'rb'),'image/webp,image/*',),}
+    res=requests.post(url,data={'puid':uid,'_token':token()},files=files,headers=headers,cookies=cookie)
+    resdict=json.loads(res.text)
+    return(resdict['objectId'])
 
 def taskactivelist(courseId,classId):
     global a
@@ -64,8 +84,9 @@ def getvar(url):
 
 def sign(aid,uid):
     global status,activates
-    url="https://mobilelearn.chaoxing.com/pptSign/stuSignajax?activeId="+aid+"&uid="+uid+"&clientip=&latitude=-1&longitude=-1&appType=15&fid=0"
-    res=requests.get(url,headers=headers,cookies=cookie)
+    url="https://mobilelearn.chaoxing.com/pptSign/stuSignajax"
+    objectId=upload()
+    res=requests.post(url,data={"name":name,"address":address,'activeId':aid,'uid':uid,'longitude':longitude,'latitude':latitude,'objectId':objectId},headers=headers,cookies=cookie)
     push(SCKEY,res.text)
     if(res.text=="success"):
         print("用户:"+uid+" 签到成功！")
@@ -108,7 +129,7 @@ print("获取成功:")
 for item in coursedata:#打印课程
         print(str(index)+".课程名称:"+item['name'])
         index+=1
-        
+      
 while 1:
     for i in range(index):
         time.sleep(speed)#休眠
