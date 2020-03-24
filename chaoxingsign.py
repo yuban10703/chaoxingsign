@@ -35,20 +35,20 @@ def login(username,passwd): #获取cookie
 cookie=login(username,passwd)
 uid=cookie['UID']
 
-def token():
+def token():#获取上传图片用的token
     url='https://pan-yz.chaoxing.com/api/token/uservalid'
     res=requests.get(url,headers=headers,cookies=cookie)
     tokendict=json.loads(res.text)
     return(tokendict['_token']) 
 
-def upload():
+def upload():#上传图片
     url='https://pan-yz.chaoxing.com/upload'
     files={'file':(picname, open(picname,'rb'),'image/webp,image/*',),}
     res=requests.post(url,data={'puid':uid,'_token':token()},files=files,headers=headers,cookies=cookie)
     resdict=json.loads(res.text)
     return(resdict['objectId'])
 
-def taskactivelist(courseId,classId):
+def taskactivelist(courseId,classId):#查找签到任务
     global a
     url="https://mobilelearn.chaoxing.com/ppt/activeAPI/taskactivelist?courseId="+str(courseId)+"&classId="+str(classId)+"&uid="+uid
     res=requests.get(url,headers=headers,cookies=cookie)
@@ -73,7 +73,7 @@ def taskactivelist(courseId,classId):
         print('error',respon)#不知道为啥...
 
 
-def getvar(url):
+def getvar(url):#查找activePrimaryId
     var1 = url.split("&")
     for var in var1:
         var2 = var.split("=")
@@ -82,7 +82,7 @@ def getvar(url):
     return "ccc"  
 
 
-def sign(aid,uid):
+def sign(aid,uid):#签到,偷了个懒,所有的签到类型都用这个,我测试下来貌似都没问题
     global status,activates
     url="https://mobilelearn.chaoxing.com/pptSign/stuSignajax"
     objectId=upload()
