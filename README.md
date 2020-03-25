@@ -5,3 +5,4 @@
 支持server酱推送  
 能自定义照片,地址以及名字  
 <img src="https://cdn.jsdelivr.net/gh/yuban10703/BlogImgdata/img/20200325023103.png"/>
+<img src="https://cdn.jsdelivr.net/gh/yuban10703/BlogImgdata/img/20200325023145.jpg"/>
