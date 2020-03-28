@@ -5,6 +5,6 @@
 支持学习通的所有签到  
 支持server酱推送  
 能自定义照片,地址以及名字  
-用screen后台挂住就好了,断网的话可能会奔溃(一般不会断网⑧..)  
+用screen后台挂住就好了,断网的话可能会boom(一般不会断网⑧..)  
 <img src="https://cdn.jsdelivr.net/gh/yuban10703/BlogImgdata/img/20200325023103.png"/>
 <img src="https://cdn.jsdelivr.net/gh/yuban10703/BlogImgdata/img/20200325023145.jpg"/>
