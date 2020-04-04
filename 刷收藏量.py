@@ -97,7 +97,7 @@ def favorite(time,enc):
     res = requests.post(url,data=alldata,cookies=cookie, headers=headers,allow_redirects=False)
     print(res.text)
     # print(url)
-for x in range(1,600):
+for x in range(5000):
     id=str(x)
     a = enc()
     favorite(a[0],a[1])
