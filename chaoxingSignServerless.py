@@ -17,7 +17,7 @@ class CxSign:
     longitude = '43.9237990000'  # 经度
     picname = 'a.png'  # 同目录下的照片名字,如果不用就留空 picname=''
     # 设置轮询间隔(单位:秒,建议不低于5)
-    speed = 1
+    speed = 10
 
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36'
@@ -116,7 +116,7 @@ class CxSign:
         return "ccc"
 
     def sign(self, aid, uid):  # 签到,偷了个懒,所有的签到类型都用这个,我测试下来貌似都没问题
-        CxSign.status, CxSign.activates
+        # CxSign.status, CxSign.activates
         url = "https://mobilelearn.chaoxing.com/pptSign/stuSignajax"
         objectId = CxSign.upload()
         res = requests.post(url, data={
@@ -127,7 +127,7 @@ class CxSign:
         if (res.text == "success"):
             print("用户:" + uid + " 签到成功！")
             CxSign.activates.append(aid)
-            status = 2
+            CxSign.status = 2
         else:
             print(res.text, '签到失败')
             CxSign.activates.append(aid)
@@ -145,7 +145,7 @@ class CxSign:
             }
             req = requests.post(api, data=data)
 
-    def prepare(self):
+    def doSign(self):
         url = "http://mooc1-api.chaoxing.com/mycourse/backclazzdata?view=json&rss=1"
         res = requests.get(url, headers=CxSign.headers, cookies=CxSign.cookie)
         cdata = json.loads(res.text)
@@ -166,16 +166,15 @@ class CxSign:
             print(str(CxSign.index) + ".课程名称:" + item['name'])
             CxSign.index += 1
 
-        
         for i in range(CxSign.index):
-            time.sleep(CxSign.speed)  # 休眠
             CxSign.taskactivelist(self, CxSign.coursedata[i]['courseid'],
-                                    CxSign.coursedata[i]['classid'])
+                                  CxSign.coursedata[i]['classid'])
             if CxSign.a == 2:
                 CxSign.a = 0
             else:
                 print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                        '[监控运行中]课程:', CxSign.coursedata[i]['name'], '未查询到签到活动')
+                      '[监控运行中]课程:', CxSign.coursedata[i]['name'], '未查询到签到活动')
+            time.sleep(CxSign.speed)  # 休眠
 
 
 def main_handler(event, context):
@@ -183,7 +182,7 @@ def main_handler(event, context):
     with open("account.json", 'r') as f:
         account = json.loads(f.read())
     sign = CxSign(account)
-    sign.prepare()
+    sign.doSign()
 
 
 if __name__ == "__main__":
