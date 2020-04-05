@@ -166,7 +166,6 @@ class CxSign:
             print(str(CxSign.index) + ".课程名称:" + item['name'])
             CxSign.index += 1
 
-<<<<<<< HEAD
         for i in range(CxSign.index):
             CxSign.taskactivelist(self, CxSign.coursedata[i]['courseid'],
                                   CxSign.coursedata[i]['classid'])
@@ -176,18 +175,6 @@ class CxSign:
                 print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                       '[监控运行中]课程:', CxSign.coursedata[i]['name'], '未查询到签到活动')
             time.sleep(CxSign.speed)  # 休眠
-=======
-        while 1:
-            for i in range(CxSign.index):
-                time.sleep(CxSign.speed)  # 休眠
-                CxSign.taskactivelist(self, CxSign.coursedata[i]['courseid'],
-                                      CxSign.coursedata[i]['classid'])
-                if CxSign.a == 2:
-                    CxSign.a = 0
-                else:
-                    print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                          '[监控运行中]课程:', CxSign.coursedata[i]['name'], '未查询到签到活动')
->>>>>>> parent of 6bad771... Update chaoxingSignServerless.py
 
 
 def main_handler(event, context):
