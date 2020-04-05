@@ -17,7 +17,7 @@ class CxSign:
     longitude = '43.9237990000'  # 经度
     picname = 'a.png'  # 同目录下的照片名字,如果不用就留空 picname=''
     # 设置轮询间隔(单位:秒,建议不低于5)
-    speed = 10
+    speed = 1
 
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36'
@@ -166,16 +166,16 @@ class CxSign:
             print(str(CxSign.index) + ".课程名称:" + item['name'])
             CxSign.index += 1
 
-        while 1:
-            for i in range(CxSign.index):
-                time.sleep(CxSign.speed)  # 休眠
-                CxSign.taskactivelist(self, CxSign.coursedata[i]['courseid'],
-                                      CxSign.coursedata[i]['classid'])
-                if CxSign.a == 2:
-                    CxSign.a = 0
-                else:
-                    print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                          '[监控运行中]课程:', CxSign.coursedata[i]['name'], '未查询到签到活动')
+        
+        for i in range(CxSign.index):
+            time.sleep(CxSign.speed)  # 休眠
+            CxSign.taskactivelist(self, CxSign.coursedata[i]['courseid'],
+                                    CxSign.coursedata[i]['classid'])
+            if CxSign.a == 2:
+                CxSign.a = 0
+            else:
+                print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                        '[监控运行中]课程:', CxSign.coursedata[i]['name'], '未查询到签到活动')
 
 
 def main_handler(event, context):
