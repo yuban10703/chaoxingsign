@@ -165,19 +165,34 @@ class CxSign:
         for item in CxSign.coursedata:  # 打印课程
             print(str(CxSign.index) + ".课程名称:" + item['name'])
             CxSign.index += 1
-
-        for i in range(CxSign.index):
-            CxSign.taskactivelist(self, CxSign.coursedata[i]['courseid'],
-                                  CxSign.coursedata[i]['classid'])
-            if CxSign.a == 2:
-                CxSign.a = 0
-            else:
-                print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                      '[监控运行中]课程:', CxSign.coursedata[i]['name'], '未查询到签到活动')
-            time.sleep(CxSign.speed)  # 休眠
+        if __name__ == "__main__":
+            print("运行于普通模式")
+            while 1:
+                for i in range(CxSign.index):
+                    CxSign.taskactivelist(self, CxSign.coursedata[i]['courseid'],
+                                          CxSign.coursedata[i]['classid'])
+                    if CxSign.a == 2:
+                        CxSign.a = 0
+                    else:
+                        print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                              '[监控运行中]课程:', CxSign.coursedata[i]['name'], '未查询到签到活动')
+                    time.sleep(CxSign.speed)  # 休眠
+        else:
+            print("运行于云函数模式")
+            for i in range(CxSign.index):
+                CxSign.taskactivelist(self, CxSign.coursedata[i]['courseid'],
+                                      CxSign.coursedata[i]['classid'])
+                if CxSign.a == 2:
+                    CxSign.a = 0
+                else:
+                    print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                          '[监控运行中]课程:', CxSign.coursedata[i]['name'], '未查询到签到活动')
+                time.sleep(CxSign.speed)  # 休眠
 
 
 def main_handler(event, context):
+    # 通过 __name__ 来确定是云函数还是普通模式
+    # print(__name__)
     # 此处读取json文件获取信息
     with open("account.json", 'r') as f:
         account = json.loads(f.read())
