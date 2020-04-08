@@ -2,7 +2,6 @@
 原作者`https://www.bilibili.com/video/av94208525`食用方法`https://yuban10703.xyz/archives/527`  
 有问题直接issue提,别在blog写.....  
 <!-- 填上账号密码运行运行就好了,别忘记装模块   -->
-复制`account.json.example`到`account.json`并填写其中的内容  
 支持学习通的所有签到  
 支持server酱推送  
 能自定义照片,地址以及名字  
