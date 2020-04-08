@@ -7,10 +7,6 @@
 支持server酱推送  
 能自定义照片,地址以及名字  
 用screen后台挂住就好了,断网的话可能会boom(一般不会断网⑧..)  
-<!-- <img src="https://cdn.jsdelivr.net/gh/yuban10703/BlogImgdata/img/20200325023103.png"/> -->
-<!-- <img src="https://cdn.jsdelivr.net/gh/yuban10703/BlogImgdata/img/20200325023145.jpg"/> -->
-![test1](https://cdn.jsdelivr.net/gh/yuban10703/BlogImgdata/img/20200325023103.png)
-![test2](https://cdn.jsdelivr.net/gh/yuban10703/BlogImgdata/img/20200325023145.jpg)
 
 ## 云函数版本使用教程
 1. 去腾讯云创建一个云函数,目前测试广州好像不能用.其他地区可以.
