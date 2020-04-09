@@ -145,7 +145,6 @@ class CxSign(): #搞不懂class怎么用.........
             # return (resdict['objectId'])
 
     def sign(aid,i,index):  # 签到,偷了个懒,所有的签到类型都用这个,我测试下来貌似都没问题
-        global status
         url = "https://mobilelearn.chaoxing.com/pptSign/stuSignajax"
         if len(CxSign(i).picname)==0:
             allobjectid.append('') #占位置,不然和用户ID对不上
@@ -190,8 +189,8 @@ class CxSign(): #搞不懂class怎么用.........
         # data = { 'activeId': aid, 'uid': cook[i]['UID'],}
         res = requests.post(url, data=data, headers=headers, cookies=cook[i])
         print("签到状态:", res.text)
-        CxSign.push(i, index, res.text)
-      #  activates.append(aid)
+        if res.text == 'success':
+            CxSign.push(i, index, res.text)
 
     def push(i,index, msg):
         try:
