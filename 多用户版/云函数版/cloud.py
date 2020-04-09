@@ -16,8 +16,8 @@ allobjectid=[]
 with open('conf.json', 'r', encoding='utf-8') as f:
     conf = json.loads(f.read())
     print('获取配置成功')
-class CxSign():
-    def __init__(self,num):
+class CxSign(): #搞不懂class怎么用.........
+    def __init__(self,num): #读取配置......(感觉可以写的更简单的......)
         CxSign.username = conf['username'][num]
         CxSign.passwd = conf['passwd'][num]
         if len(conf['SCKEY'])==1:
@@ -62,7 +62,7 @@ class CxSign():
         session = requests.session()
         cookie_jar = session.post(url=url, data=data, headers=headers).cookies
         cookie_t = requests.utils.dict_from_cookiejar(cookie_jar)
-        cook.append(cookie_t)
+        cook.append(cookie_t) #把所有用户的cookie写进一个列表
         return cookie_t
 
     def subject(i):  # 获取课程
@@ -84,7 +84,7 @@ class CxSign():
             courseid.append(item['content']['course']['data'][0]['id'])
             name.append(item['content']['course']['data'][0]['name'])
             classid.append(item['content']['id'])
-        allname.append(name)
+        allname.append(name)#把所有用户的数据存进列表......
         allclassid.append(classid)
         allcourseid.append(courseid)
             # coursedata.append(pushdata)
@@ -95,7 +95,7 @@ class CxSign():
         global a
         aid=[]
         url = "https://mobilelearn.chaoxing.com/ppt/activeAPI/taskactivelist"
-        for index in range(len(allname[i])):
+        for index in range(len(allname[i])):#轮询这个用户的所有课程...
             payload = {'courseId': str(allcourseid[i][index]), 'classId': str(allclassid[i][index]), 'uid': cook[i]['UID']}
             time.sleep(1.5)
             print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),'用户:',i,'正在查询课程:',allname[i][index])
@@ -148,7 +148,7 @@ class CxSign():
         global status
         url = "https://mobilelearn.chaoxing.com/pptSign/stuSignajax"
         if len(CxSign(i).picname)==0:
-            allobjectid.append('')
+            allobjectid.append('') #占位置,不然和用户ID对不上
             objectId =''
 
         else:
