@@ -9,14 +9,14 @@
 能自定义照片,地址以及名字  
 用screen后台挂住就好了,断网的话可能会boom(一般不会断网⑧..)  
 ## 配置文件
-"username":手机号
-"passwd":密码
-"SCKEY":server酱的key
-"name":老师那里显示的名字,无特殊需要默认就行
-"address":地址信息
-"latitude":经度,同上
-"longitude":纬度,同上
-"picname":同目录的图片名字
+1. "username":手机号 
+2. "passwd":密码
+3. "SCKEY":server酱的key
+4. "name":老师那里显示的名字,无特殊需要默认就行
+5. "address":地址信息
+6. "latitude":经度,同上
+7. "longitude":纬度,同上
+8. "picname":同目录的图片名字
 ## 本地使用教程
 1. python3环境
 2. 安装模块: pip install requests
