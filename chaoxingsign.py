@@ -3,9 +3,9 @@ import json
 import time
 import datetime
 
-session = requests.session()
+# session = requests.session()
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36'}
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36'}#这个头目前没什么用,留着备用...
 allsubject = []
 allname = []
 allclassid = []
@@ -14,19 +14,20 @@ activates = []
 allaid = []
 cook = []
 allobjectid = []
-with open('conf.json', 'r', encoding='utf-8') as f:
+with open('conf.json', 'r', encoding='utf-8') as f:  # 读取配置文件
     conf = json.loads(f.read())
     print('获取配置成功')
 
 
-class CxSign():
-    def __init__(self, num):
-        CxSign.username = conf['username'][num]
+class CxSign():  # 尝试写一下class.....结果发现写的乱七八糟......
+    def __init__(self, num):  # 转换一下配置文件
+        CxSign.username = conf['username'][num]  # 根据列表顺序来读取
         CxSign.passwd = conf['passwd'][num]
-        if len(conf['SCKEY']) == 1:
-            CxSign.SCKEY = conf['SCKEY'][0]
+
+        if len(conf['SCKEY']) == 1:  # 如果只有一个参数
+            CxSign.SCKEY = conf['SCKEY'][0]  # 那么所有的用户都用这一个参数
         else:
-            CxSign.SCKEY = conf['SCKEY'][num]
+            CxSign.SCKEY = conf['SCKEY'][num]  # 如果不是一个参数,那就各用各的参数
 
         if len(conf['name']) == 1:
             CxSign.name = conf['name'][0]
@@ -52,21 +53,15 @@ class CxSign():
             CxSign.picname = conf['picname'][0]
         else:
             CxSign.picname = conf['picname'][num]
-        # self.name = conf['name'][num]
-        # self.address = conf['address'][num]
-        # self.longitude = conf['longitude'][num]
-        # self.latitude = conf['latitude'][num]
-        # self.picname = conf['picname'][num]
-        # self.speed = conf['speed']
 
-    def login(num):  # 获取cookie
+    def login(num):  # 获取cookie,传入用户的列表位置,所有的参数都能对上...(应该能吧....)
         url = 'https://passport2-api.chaoxing.com/v11/loginregister'
         data = {'uname': CxSign(num).username, 'code': CxSign(num).passwd, }
         session = requests.session()
         cookie_jar = session.post(url=url, data=data, headers=headers).cookies
         cookie_t = requests.utils.dict_from_cookiejar(cookie_jar)
         cook.append(cookie_t)
-        print('用户:',num,'获取cookie成功')
+        print('用户:', num, '获取cookie成功')
         # return cookie_t
 
     def subject(i):  # 获取课程
@@ -88,7 +83,7 @@ class CxSign():
             courseid.append(item['content']['course']['data'][0]['id'])
             name.append(item['content']['course']['data'][0]['name'])
             classid.append(item['content']['id'])
-        allname.append(name)
+        allname.append(name)#套娃....
         allclassid.append(classid)
         allcourseid.append(courseid)
         # coursedata.append(pushdata)
@@ -97,7 +92,7 @@ class CxSign():
 
     def taskactivelist(i):  # 查找签到任务
         global a
-        aid = []
+        # aid = []
         url = "https://mobilelearn.chaoxing.com/ppt/activeAPI/taskactivelist"
         for index in range(len(allname[i])):
             payload = {'courseId': str(allcourseid[i][index]), 'classId': str(allclassid[i][index]),
@@ -126,72 +121,60 @@ class CxSign():
             else:
                 print('error', respon)  # 不知道为啥...
 
-    def token(self):  # 获取上传图片用的token
-        url = 'https://pan-yz.chaoxing.com/api/token/uservalid'
-        res = requests.get(url, headers=headers, cookies=cook[0])
-        tokendict = json.loads(res.text)
-        return (tokendict['_token'])
-
     def upload(i):  # 上传图片
-        try:
-            picname = CxSign(i).picname
-        except:
-            picname = ''
-
-        if picname.isspace() or len(picname) == 0:
+        if len(CxSign(i).picname) == 0:
             return
         else:
-            url = 'https://pan-yz.chaoxing.com/upload'
-            files = {'file': (picname, open(picname, 'rb'),
-                              'image/webp,image/*',), }
-            res = requests.post(url, data={'puid': cook[0]['UID'], '_token': CxSign.token(i)}, files=files,
-                                headers=headers, cookies=cook[0])
-            resdict = json.loads(res.text)
-            allobjectid.append(resdict['objectId'])
-            # return (resdict['objectId'])
+            print('上传图片~~')
+            tokenurl = 'https://pan-yz.chaoxing.com/api/token/uservalid'
+            tokenres = requests.get(tokenurl, headers=headers, cookies=cook[0])  # 因为拍照签到的图片只需要一个ID,所以直接用第一个用户上传就行了,,,
+            tokendict = json.loads(tokenres.text)
+            token = tokendict['_token']
+            uploadurl = 'https://pan-yz.chaoxing.com/upload'
+            picname = CxSign(i).picname
+            files = {'file': (picname, open(picname, 'rb'), 'image/webp,image/*',), }
+            uploadres = requests.post(uploadurl, data={'puid': cook[0]['UID'], '_token': token}, files=files,
+                                      headers=headers, cookies=cook[0])
+            resdict = json.loads(uploadres.text)
+            # allobjectid.append(resdict['objectId'])
+            return (resdict['objectId'])
 
     def sign(aid, i, index):  # 签到,偷了个懒,所有的签到类型都用这个,我测试下来貌似都没问题
         url = "https://mobilelearn.chaoxing.com/pptSign/stuSignajax"
-        if len(CxSign(i).picname) == 0:
-            allobjectid.append('')
-            objectId = ''
 
-        else:
-            CxSign.upload(i)
-            objectId = allobjectid[i]
-        try:
-            name = CxSign(i).name
-        except:
-            try:
-                name = CxSign.name
-            except:
-                name = ''
-
-        try:
-            address = CxSign(i).address
-        except:
-            try:
-                address = CxSign.address
-            except:
-                address = ''
-
-        try:
-            longitude = CxSign(i).longitude
-        except:
-            try:
-                longitude = CxSign.longitude
-            except:
-                longitude = ''
-        try:
-            latitude = CxSign(i).latitude
-        except:
-            try:
-                latitude = CxSign.latitude
-            except:
-                latitude = ''
-
-        data = {'name': name, 'address': address, 'activeId': aid, 'uid': cook[i]['UID'],
-                'longitude': longitude, 'latitude': latitude, 'objectId': objectId}
+        # try:
+        #     name = CxSign(i).name
+        # except:
+        #     try:
+        #         name = CxSign.name
+        #     except:
+        #         name = ''
+        #
+        # try:
+        #     address = CxSign(i).address
+        # except:
+        #     try:
+        #         address = CxSign.address
+        #     except:
+        #         address = ''
+        #
+        # try:
+        #     longitude = CxSign(i).longitude
+        # except:
+        #     try:
+        #         longitude = CxSign.longitude
+        #     except:
+        #         longitude = ''
+        # try:
+        #     latitude = CxSign(i).latitude
+        # except:
+        #     try:
+        #         latitude = CxSign.latitude
+        #     except:
+        #         latitude = ''
+        objectId = CxSign.upload(i)
+        data = {'name': CxSign(i).name, 'address': CxSign(i).address, 'activeId': aid, 'uid': cook[i]['UID'],
+                'longitude': CxSign(i).longitude, 'latitude': CxSign(i).latitude, 'objectId': objectId}
         # data = { 'activeId': aid, 'uid': cook[i]['UID'],}
         res = requests.post(url, data=data, headers=headers, cookies=cook[i])
         print("签到状态:", res.text)
@@ -200,18 +183,18 @@ class CxSign():
         activates.append(aid)
 
     def push(i, index, msg):
-        try:
-            E_SCKEY = CxSign(i).SCKEY
-        except:
-            try:
-                E_SCKEY = CxSign.SCKEY
-            except:
-                E_SCKEY = ''
-        if E_SCKEY.isspace() or len(E_SCKEY) == 0:
-
+        # try:
+        #     E_SCKEY = CxSign(i).SCKEY
+        # except:
+        #     try:
+        #         E_SCKEY = CxSign.SCKEY
+        #     except:
+        #         E_SCKEY = ''
+        SCKEY = CxSign(i).SCKEY
+        if SCKEY.isspace() or len(SCKEY) == 0:
             return
         else:
-            api = 'https://sc.ftqq.com/' + E_SCKEY + '.send'
+            api = 'https://sc.ftqq.com/' + SCKEY + '.send'
             title = u"签到辣!"
             content = '用户:' + str(i) + '\n\n课程: ' + allname[i][index] + '\n\n签到状态:' + msg
             data = {
@@ -219,7 +202,8 @@ class CxSign():
                 "desp": content
             }
             requests.post(api, data=data)
-            print('已推送')
+            print('已推送~')
+
 
 number = len(conf['username'])
 if __name__ == "__main__":
@@ -238,6 +222,8 @@ if __name__ == "__main__":
 
 else:
     print("运行于云函数模式")
+
+
     def main_handler(event, context):
         for n in range(number):
             CxSign.login(n)
@@ -250,6 +236,5 @@ else:
         for o in range(number):
             CxSign.taskactivelist(o)
 
-
-    if __name__ == "__main__":
-        main_handler("", "")
+if __name__ == "__main__":
+    main_handler("", "")
