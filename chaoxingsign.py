@@ -50,7 +50,8 @@ class CxSign():
         res = requests.get(url, headers=headers, cookies=self.cookie)
         cdata = json.loads(res.text)
         if (cdata['result'] != 1):
-            print("课程列表获取失败")
+            print("课程列表获取失败\n重试中")
+            raise(requests.exceptions.ConnectionError)
         for item in cdata['channelList']:
             if ("course" in item['content']):
                 self.item_all.append(item['content'])
