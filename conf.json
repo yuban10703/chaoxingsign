@@ -1,10 +1,10 @@
-[{
-    "username": "",
-    "passwd": "",
-    "SCKEY": "",
-    "name": "",
-    "address": "",
-    "latitude": "32.2829260000",
-    "longitude": "43.9237990000",
-    "picname": ""
-}]
+{
+"username": [""],
+"passwd": [""],
+"SCKEY": [""],
+"name": [""],
+"address": [""],
+"latitude": ["32.2829260000"],
+"longitude": ["43.9237990000"],
+"picname": [""]
+}
