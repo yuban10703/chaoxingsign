@@ -14,7 +14,7 @@ activates = []
 allaid = []
 cook = []
 allobjectid = []
-with open('conf.json', 'r', encoding='utf-8') as f:
+with open('config.json', 'r', encoding='utf-8') as f:
     conf = json.loads(f.read())
     print('获取配置成功')
 
